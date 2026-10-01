@@ -1,0 +1,15 @@
+{
+  "name": "pizza-shop-pos",
+  "version": "1.0.0",
+  "description": "Offline Desktop POS & Sales Management System for Pizza Shop",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": ["pos", "pizza", "restaurant", "electron", "offline"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^34.3.0"
+  }
+}

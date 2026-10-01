@@ -1,0 +1,157 @@
+[
+  {
+    "id": "p-1",
+    "name": "Chicken Fajita Pizza",
+    "category": "Pizza",
+    "description": "Fajita chicken, onions, bell peppers, mozzarella & special pizza sauce",
+    "sizes": {
+      "Small": 550,
+      "Medium": 1150,
+      "Large": 1650,
+      "Family": 2100
+    },
+    "image": "🍕"
+  },
+  {
+    "id": "p-2",
+    "name": "Chicken Tikka Pizza",
+    "category": "Pizza",
+    "description": "Traditional chicken tikka chunks, onion, mozzarella cheese & herbs",
+    "sizes": {
+      "Small": 550,
+      "Medium": 1150,
+      "Large": 1650,
+      "Family": 2100
+    },
+    "image": "🍕"
+  },
+  {
+    "id": "p-3",
+    "name": "Pepperoni Feast",
+    "category": "Pizza",
+    "description": "Loaded beef/chicken pepperoni, double mozzarella cheese & oregano",
+    "sizes": {
+      "Small": 600,
+      "Medium": 1250,
+      "Large": 1750,
+      "Family": 2250
+    },
+    "image": "🍕"
+  },
+  {
+    "id": "p-4",
+    "name": "BBQ Buzz Special",
+    "category": "Pizza",
+    "description": "Smoky BBQ chicken, smoked onions, jalapenos & BBQ sauce drizzle",
+    "sizes": {
+      "Small": 600,
+      "Medium": 1250,
+      "Large": 1750,
+      "Family": 2250
+    },
+    "image": "🍕"
+  },
+  {
+    "id": "p-5",
+    "name": "Cheese Lover / Margherita",
+    "category": "Pizza",
+    "description": "Rich tomato basil sauce layered with 100% pure mozzarella & cheddar",
+    "sizes": {
+      "Small": 480,
+      "Medium": 980,
+      "Large": 1450,
+      "Family": 1850
+    },
+    "image": "🧀"
+  },
+  {
+    "id": "p-6",
+    "name": "Veggie Delight",
+    "category": "Pizza",
+    "description": "Olives, mushrooms, bell peppers, sweet corn, onions & melted cheese",
+    "sizes": {
+      "Small": 480,
+      "Medium": 980,
+      "Large": 1450,
+      "Family": 1850
+    },
+    "image": "🥦"
+  },
+  {
+    "id": "p-7",
+    "name": "Malai Boti Crown Crust",
+    "category": "Pizza",
+    "description": "Creamy malai boti chicken chunks, mild spices, cream sauce & garlic mayo",
+    "sizes": {
+      "Small": 650,
+      "Medium": 1350,
+      "Large": 1850,
+      "Family": 2350
+    },
+    "image": "👑"
+  },
+  {
+    "id": "s-1",
+    "name": "Garlic Bread (4 Pcs)",
+    "category": "Sides",
+    "description": "Toasted herb garlic bread with garlic butter glaze",
+    "price": 280,
+    "image": "🥖"
+  },
+  {
+    "id": "s-2",
+    "name": "Cheesy Garlic Bread",
+    "category": "Sides",
+    "description": "Crispy French loaf topped with melted mozzarella cheese",
+    "price": 380,
+    "image": "🍞"
+  },
+  {
+    "id": "s-3",
+    "name": "Chicken Hot Wings (6 Pcs)",
+    "category": "Sides",
+    "description": "Spicy roasted chicken wings with dip sauce",
+    "price": 450,
+    "image": "🍗"
+  },
+  {
+    "id": "s-4",
+    "name": "Crispy French Fries",
+    "category": "Sides",
+    "description": "Golden crispy salted potato fries",
+    "price": 220,
+    "image": "🍟"
+  },
+  {
+    "id": "d-1",
+    "name": "Soft Drink (Can 345ml)",
+    "category": "Beverages",
+    "description": "Pepsi / 7Up / Mirinda / Coke / Sprite",
+    "price": 120,
+    "image": "🥤"
+  },
+  {
+    "id": "d-2",
+    "name": "Soft Drink (1.5 Litre)",
+    "category": "Beverages",
+    "description": "Large party bottle",
+    "price": 240,
+    "image": "🍾"
+  },
+  {
+    "id": "d-3",
+    "name": "Mineral Water (500ml)",
+    "category": "Beverages",
+    "description": "Chilled drinking water",
+    "price": 70,
+    "image": "💧"
+  },
+  {
+    "id": "d-4",
+    "name": "Extra Dip Sauce",
+    "category": "Sides",
+    "description": "Garlic mayo, Ranch, or Hot Peri dip",
+    "price": 70,
+    "image": "🥣"
+  }
+]

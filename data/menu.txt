@@ -1,0 +1,16 @@
+# ID|Name|Category|Description|isPizza|PriceSmall/Single|PriceMed|PriceLarge|PriceFamily
+P1|Chicken Tikka Pizza|Pizza|Traditional chicken tikka chunks, onion, mozzarella cheese & herbs|true|550.0|1150.0|1650.0|2150.0
+P2|Chicken Fajita Pizza|Pizza|Fajita chicken, onions, bell peppers, mozzarella & special sauce|true|550.0|1150.0|1650.0|2150.0
+P3|Pepperoni Feast|Pizza|Loaded pepperoni, double mozzarella cheese & oregano herbs|true|600.0|1250.0|1750.0|2250.0
+P4|BBQ Buzz Special|Pizza|Smoky BBQ chicken, smoked onions, jalapenos & BBQ sauce drizzle|true|600.0|1250.0|1750.0|2250.0
+P5|Cheese Lover / Margherita|Pizza|Rich tomato basil sauce layered with pure mozzarella & cheddar|true|480.0|990.0|1450.0|1890.0
+P6|Veggie Delight|Pizza|Olives, mushrooms, bell peppers, sweet corn, onions & cheese|true|480.0|990.0|1450.0|1890.0
+P7|Malai Boti Crown Crust|Pizza|Creamy chicken chunks, mild spices, cream sauce & garlic mayo|true|650.0|1350.0|1850.0|2390.0
+S1|Garlic Bread (4 Pcs)|Sides|Toasted herb garlic bread with garlic butter glaze|false|280.0|0|0|0
+S2|Cheesy Garlic Bread|Sides|Crispy French loaf topped with melted mozzarella cheese|false|380.0|0|0|0
+S3|Chicken Hot Wings (6 Pcs)|Sides|Spicy roasted chicken wings with dip sauce|false|450.0|0|0|0
+S4|Crispy French Fries|Sides|Golden crispy salted potato fries|false|220.0|0|0|0
+S5|Extra Dip Sauce|Sides|Garlic mayo or hot chili peri sauce|false|70.0|0|0|0
+B1|Soft Drink (Can 345ml)|Beverages|Pepsi / 7Up / Mirinda / Coke / Sprite|false|120.0|0|0|0
+B2|Soft Drink (1.5 Litre)|Beverages|Chilled family bottle|false|240.0|0|0|0
+B3|Mineral Water (500ml)|Beverages|Chilled pure mineral water|false|70.0|0|0|0
