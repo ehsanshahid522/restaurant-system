@@ -29,8 +29,8 @@ function seedDatabase() {
       } else {
         try {
           const existing = JSON.parse(fs.readFileSync(menuTarget, 'utf-8'));
-          const hasNewAssets = Array.isArray(existing) && existing.some(it => it.image && (it.image.includes('wrap_shawarma') || it.image.includes('pasta_baked')));
-          if (!hasNewAssets) {
+          const isComplete = Array.isArray(existing) && existing.length >= 80;
+          if (!isComplete) {
             fs.copyFileSync(menuSource, menuTarget);
           }
         } catch (e) {

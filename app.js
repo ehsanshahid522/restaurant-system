@@ -280,41 +280,56 @@ async function loadInitialData() {
     }
   } catch (e) {}
 
-  // 2. Menu
+  // 2. Menu (Always load official Crave Bites flyer catalog)
   try {
+    let loadedMenu = null;
+    
+    // First priority: read from Electron IPC if packaged/desktop
     if (isElectron) {
       const m = await ipcRenderer.invoke('read-json', 'menu.json');
-      if (m && m.length) state.menu = m;
-    } else {
+      if (m && Array.isArray(m) && m.length >= 80) loadedMenu = m;
+    }
+
+    // Check localStorage, but ONLY accept if it contains the full 90+ items catalog
+    if (!loadedMenu) {
       const storedM = localStorage.getItem('cravex_menu');
-      let needsRefresh = true;
       if (storedM) {
         try {
           const parsed = JSON.parse(storedM);
-          if (Array.isArray(parsed) && parsed.length >= 35) {
-            const hasNewAssets = parsed.some(it => it.image && (it.image.includes('wrap_shawarma') || it.image.includes('pasta_baked')));
-            if (hasNewAssets) {
-              state.menu = parsed;
-              needsRefresh = false;
-            }
-          }
-        } catch (e) {}
-      }
-      if (needsRefresh) {
-        try {
-          const res = await fetch('database/menu.json');
-          if (res.ok) {
-            state.menu = await res.json();
-            localStorage.setItem('cravex_menu', JSON.stringify(state.menu));
+          if (Array.isArray(parsed) && parsed.length >= 80) {
+            loadedMenu = parsed;
           }
         } catch (e) {}
       }
     }
+
+    // Instant offline sync from embedded official flyer catalog (0ms latency, zero CORS)
+    if (!loadedMenu && typeof window !== 'undefined' && window.CRAVE_OFFICIAL_MENU && window.CRAVE_OFFICIAL_MENU.length >= 80) {
+      loadedMenu = JSON.parse(JSON.stringify(window.CRAVE_OFFICIAL_MENU));
+    }
+
+    // Fallback fetch
+    if (!loadedMenu) {
+      try {
+        const res = await fetch('database/menu.json');
+        if (res.ok) {
+          const fetched = await res.json();
+          if (Array.isArray(fetched) && fetched.length >= 80) loadedMenu = fetched;
+        }
+      } catch (e) {}
+    }
+
+    if (!loadedMenu || loadedMenu.length < 80) {
+      loadedMenu = getDefaultMenu();
+    }
+
+    state.menu = loadedMenu;
+    localStorage.setItem('cravex_menu', JSON.stringify(state.menu));
+    if (isElectron) {
+      try { await ipcRenderer.invoke('write-json', 'menu.json', state.menu); } catch (e) {}
+    }
   } catch (e) {
     console.warn('Error loading menu:', e);
-  }
-
-  if (!state.menu || state.menu.length === 0) {
     state.menu = getDefaultMenu();
   }
 
@@ -375,15 +390,12 @@ function updateCategoryCounts() {
   if (sidebarOrderEl) sidebarOrderEl.textContent = `${todayOrders} Today`;
 }
 
-// Fallback Default Menu
+// Fallback Default Menu (Official 94 Flyer Items)
 function getDefaultMenu() {
-  return [
-    { id: 'b-1', name: 'CraveX Monster Beef Burger', category: 'Burgers', description: 'Double juicy smashed beef patties, cheddar, caramelized onions & secret sauce', price: 850, badge: 'Bestseller 🔥', image: 'assets/food/burger_monster.jpg', emoji: '🍔' },
-    { id: 'b-2', name: 'Zinger Crunch Burger', category: 'Burgers', description: 'Ultra crispy chicken fillet, fresh iceberg lettuce & spicy garlic mayo', price: 590, badge: 'Popular', image: 'assets/food/burger_zinger.jpg', emoji: '🍔' },
-    { id: 'p-1', name: 'Chicken Tikka Pizza', category: 'Pizza', description: 'Tandoori chicken tikka cubes, onions, pure mozzarella cheese & herbs', sizes: { Small: 550, Medium: 1150, Large: 1650, Family: 2150 }, badge: 'Bestseller', image: 'assets/food/pizza_tikka.jpg', emoji: '🍕' },
-    { id: 's-1', name: 'CraveX Loaded Cheese Fries', category: 'Sides', description: 'Golden crispy fries drenched in melted cheddar, chicken & peri mayo', price: 490, badge: 'Must Try', image: 'assets/food/sides_loaded_fries.jpg', emoji: '🍟' },
-    { id: 'd-1', name: 'Soft Drink (Can 345ml)', category: 'Beverages', description: 'Chilled Pepsi, 7Up, Mirinda, Coke, or Sprite', price: 120, badge: 'Chilled', image: 'assets/food/drink_can.jpg', emoji: '🥤' }
-  ];
+  if (typeof window !== 'undefined' && window.CRAVE_OFFICIAL_MENU && window.CRAVE_OFFICIAL_MENU.length >= 80) {
+    return JSON.parse(JSON.stringify(window.CRAVE_OFFICIAL_MENU));
+  }
+  return [];
 }
 
 // ==========================================================================
@@ -2026,15 +2038,17 @@ function importMenuBackup(file) {
 async function resetDefaultMenu() {
   if (!confirm('Are you sure you want to restore the default CraveX Bites flyer menu? Any unsaved custom items will be replaced.')) return;
   try {
-    const res = await fetch('database/menu.json');
-    if (res.ok) {
-      state.menu = await res.json();
-      await persistMenu();
-      renderCategorySidebar();
-      renderCatalog();
-      renderMenuManagementTable();
-      showToast('🔄 Restored default CRAVE Bites menu successfully!');
+    if (typeof window !== 'undefined' && window.CRAVE_OFFICIAL_MENU && window.CRAVE_OFFICIAL_MENU.length >= 80) {
+      state.menu = JSON.parse(JSON.stringify(window.CRAVE_OFFICIAL_MENU));
+    } else {
+      const res = await fetch('database/menu.json');
+      if (res.ok) state.menu = await res.json();
     }
+    await persistMenu();
+    renderCategorySidebar();
+    renderCatalog();
+    renderMenuManagementTable();
+    showToast('🔄 Restored default CRAVE Bites menu successfully!');
   } catch (e) {
     showToast('Failed to reload default menu.', 'error');
   }
