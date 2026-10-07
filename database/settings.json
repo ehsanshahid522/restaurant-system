@@ -1,9 +1,12 @@
 {
-  "shopName": "Cheesy Crust Pizza Co.",
-  "tagline": "Hot, Fresh & Delicious Every Slice",
-  "phone": "+92 300 0000000",
-  "address": "Main Commercial Market, Near Clock Tower",
+  "shopName": "CRAVE BITES",
+  "tagline": "Bigger Bites X Better Cravings",
+  "phone": "03714439700",
+  "address": "Near Majadadia Masjid, Imam Bargah Road, Toba Tek Singh",
   "currency": "Rs.",
   "taxPercentage": 0,
-  "footerNote": "Thank you for visiting! Please visit again."
+  "deliveryFee": 150,
+  "logoPath": "assets/logo.png",
+  "footerNote": "Thank you for craving with us! Bigger Bites X Better Cravings",
+  "owner": "Sakander Sagheer"
 }

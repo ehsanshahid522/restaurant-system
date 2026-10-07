@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CraveX Bites - Modern POS & Restaurant System</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- TOP BAR / BRAND HEADER -->
+    <header class="top-header">
+      <div class="brand-section">
+        <div class="brand-logo-wrap">
+          <img src="assets/logo.png" alt="CraveX Bites Logo" class="brand-logo" id="header-brand-logo">
+        </div>
+        <div class="brand-info">
+          <h1>CRAVE<span>X</span> BITES</h1>
+          <p id="header-brand-tagline">Bigger Bites X Better Cravings</p>
+        </div>
+      </div>
+
+      <!-- Navigation Screen Tabs -->
+      <nav class="nav-tabs">
+        <button class="nav-tab-btn active" data-view="pos">
+          <span class="tab-icon">🛒</span> POS Billing
+        </button>
+        <button class="nav-tab-btn" data-view="menu">
+          <span class="tab-icon">📋</span> Menu Management
+        </button>
+        <button class="nav-tab-btn" data-view="sales">
+          <span class="tab-icon">📊</span> Sales & Analytics
+        </button>
+        <button class="nav-tab-btn" data-view="settings">
+          <span class="tab-icon">⚙️</span> Store Settings
+        </button>
+      </nav>
+
+      <!-- Utilities & Shift Status -->
+      <div class="header-actions">
+        <div class="system-status">
+          <span class="status-dot"></span>
+          <span>100% OFFLINE READY</span>
+        </div>
+        <div class="live-clock" id="live-clock">--:--:--</div>
+        <button class="btn-icon-square" id="btn-toggle-fullscreen" title="Toggle Fullscreen">⛶</button>
+      </div>
+    </header>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="main-view-container">
+      
+      <!-- ================================================================
+           VIEW 1: POS TERMINAL (3-COLUMN LAYOUT)
+           ================================================================ -->
+      <section id="view-pos" class="view-section active">
+        
+        <!-- Left: Vertical Category Sidebar (Zone 1) -->
+        <aside class="pos-category-sidebar">
+          <div class="cat-sidebar-title">Categories</div>
+          <div class="cat-nav-list" id="category-filter-bar">
+            <button class="cat-item-btn active" data-category="All">
+              <span class="cat-icon">⭐</span>
+              <span class="cat-label">All Items</span>
+              <span class="cat-count-badge" id="cat-count-all">24</span>
+            </button>
+            <button class="cat-item-btn" data-category="Burgers">
+              <span class="cat-icon">🍔</span>
+              <span class="cat-label">Burgers</span>
+              <span class="cat-count-badge">5</span>
+            </button>
+            <button class="cat-item-btn" data-category="Pizza">
+              <span class="cat-icon">🍕</span>
+              <span class="cat-label">Stone Pizzas</span>
+              <span class="cat-count-badge">6</span>
+            </button>
+            <button class="cat-item-btn" data-category="Sides">
+              <span class="cat-icon">🍟</span>
+              <span class="cat-label">Sides & Wings</span>
+              <span class="cat-count-badge">5</span>
+            </button>
+            <button class="cat-item-btn" data-category="Beverages">
+              <span class="cat-icon">🥤</span>
+              <span class="cat-label">Drinks & Shakes</span>
+              <span class="cat-count-badge">5</span>
+            </button>
+            <button class="cat-item-btn" data-category="Deals">
+              <span class="cat-icon">🎁</span>
+              <span class="cat-label">Combos & Deals</span>
+              <span class="cat-count-badge">3</span>
+            </button>
+          </div>
+
+          <!-- Bottom Mini Stat in Sidebar -->
+          <div class="cat-sidebar-footer">
+            <div class="mini-stat-label">Active Orders</div>
+            <div class="mini-stat-val" id="sidebar-order-count">0 Today</div>
+          </div>
+        </aside>
+
+        <!-- Center: Food Catalog Workspace (Zone 2) -->
+        <div class="pos-catalog-main">
+          
+          <!-- Search & Filter Ribbon -->
+          <div class="catalog-top-ribbon">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="catalog-search" class="search-input" placeholder="Search burger, pizza, fries, shakes... (or press /)">
+              <button class="search-clear-btn" id="search-clear-btn" style="display: none;">✕</button>
+            </div>
+
+            <!-- Quick Filter Tags -->
+            <div class="quick-tags-wrap" id="quick-tags-wrap">
+              <button class="tag-filter-btn active" data-tag="all">All</button>
+              <button class="tag-filter-btn" data-tag="bestseller">🔥 Bestsellers</button>
+              <button class="tag-filter-btn" data-tag="spicy">🌶️ Spicy</button>
+              <button class="tag-filter-btn" data-tag="veg">🌱 Veg / Sweet</button>
+            </div>
+
+            <div class="catalog-stats-badge" id="catalog-item-count">Showing 24 items</div>
+          </div>
+
+          <!-- Products Scroll Grid -->
+          <div class="products-scroll">
+            <div class="products-grid" id="products-grid">
+              <!-- Dynamically populated by app.js with rich food image cards -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Station Cart & Checkout Terminal (Zone 3) -->
+        <aside class="pos-cart-panel">
+          
+          <!-- Cart Header Strip -->
+          <div class="cart-header">
+            <div class="cart-title-row">
+              <div class="cart-heading">
+                <h2>Billing Station</h2>
+                <span class="cart-order-badge" id="order-id-badge">#CXB-1001</span>
+              </div>
+              <button class="btn-clear-cart" id="btn-clear-cart" title="Clear Order">Clear</button>
+            </div>
+
+            <!-- Segmented Order Type Control -->
+            <div class="order-type-tabs" id="order-type-tabs">
+              <button class="order-type-btn active" data-type="Dine-in">🍽️ Dine-in</button>
+              <button class="order-type-btn" data-type="Takeaway">🛍️ Takeaway</button>
+              <button class="order-type-btn" data-type="Delivery">🛵 Delivery</button>
+            </div>
+          </div>
+
+          <!-- Customer / Table Info Strip -->
+          <div class="customer-info-strip">
+            <div class="info-input-row" id="dinein-info-row">
+              <div class="input-with-label">
+                <label>Table</label>
+                <select class="cart-input" id="cart-table-select">
+                  <option value="Table 1">T-1 (Window)</option>
+                  <option value="Table 2">T-2 (Center)</option>
+                  <option value="Table 3">T-3 (Center)</option>
+                  <option value="Table 4" selected>T-4 (Family Booth)</option>
+                  <option value="Table 5">T-5 (Family Booth)</option>
+                  <option value="Table 6">T-6 (Rooftop)</option>
+                  <option value="Table 7">T-7 (Rooftop)</option>
+                  <option value="Table 8">T-8 (VIP Lounge)</option>
+                </select>
+              </div>
+              <div class="input-with-label" style="flex: 2;">
+                <label>Customer Name</label>
+                <input type="text" id="cart-customer-name" class="cart-input" placeholder="Guest / Customer">
+              </div>
+            </div>
+
+            <div class="info-input-row" id="delivery-info-row" style="display: none;">
+              <div class="input-with-label" style="flex: 1;">
+                <label>Phone Number</label>
+                <input type="tel" id="cart-customer-phone" class="cart-input" placeholder="0300-1234567">
+              </div>
+              <div class="input-with-label" style="flex: 2;">
+                <label>Delivery Address</label>
+                <input type="text" id="cart-customer-address" class="cart-input" placeholder="Street / House address">
+              </div>
+            </div>
+          </div>
+
+          <!-- Cart Items List (Scrollable) -->
+          <div class="cart-items-scroll" id="cart-items-scroll">
+            <!-- Dynamically populated cart items -->
+            <div class="empty-cart-state" id="empty-cart-state">
+              <div class="empty-cart-icon">🛒</div>
+              <p>Cart is Empty</p>
+              <small>Select delicious items from menu</small>
+            </div>
+          </div>
+
+          <!-- Cart Footer & Billing Station -->
+          <div class="cart-footer">
+            
+            <!-- Quick Discounts Selector -->
+            <div class="discount-chips-row">
+              <span class="discount-label">Discount:</span>
+              <div class="discount-chips">
+                <button class="disc-btn active" data-disc="0">0%</button>
+                <button class="disc-btn" data-disc="5">5%</button>
+                <button class="disc-btn" data-disc="10">10%</button>
+                <button class="disc-btn" data-disc="15">15%</button>
+              </div>
+            </div>
+
+            <!-- Bill Breakdown -->
+            <div class="bill-rows">
+              <div class="bill-row">
+                <span>Subtotal</span>
+                <span id="bill-subtotal">Rs. 0.00</span>
+              </div>
+              <div class="bill-row discount-row" id="discount-row-display" style="display: none;">
+                <span>Discount (<span id="discount-pct-label">0%</span>)</span>
+                <span id="bill-discount">- Rs. 0.00</span>
+              </div>
+              <div class="bill-row" id="delivery-fee-row" style="display: none;">
+                <span>Delivery Charge</span>
+                <span id="bill-delivery">+ Rs. 150.00</span>
+              </div>
+              <div class="bill-row grand-total-row">
+                <div class="grand-label-box">
+                  <span class="total-title">TOTAL PAYABLE</span>
+                  <span class="total-items-count" id="cart-total-qty">0 items</span>
+                </div>
+                <span class="total-val" id="bill-grand-total">Rs. 0.00</span>
+              </div>
+            </div>
+
+            <!-- Payment & Cash Tender -->
+            <div class="payment-section">
+              <div class="payment-methods-grid" id="payment-methods-grid">
+                <button class="pay-btn active" data-method="Cash">💵 Cash</button>
+                <button class="pay-btn" data-method="Card">💳 Card</button>
+                <button class="pay-btn" data-method="JazzCash">📱 JazzCash</button>
+              </div>
+
+              <div class="cash-tender-row" id="cash-tender-row">
+                <div class="cash-input-wrap">
+                  <span class="cash-icon-label">Rs.</span>
+                  <input type="number" id="cash-given-input" class="cart-input cash-field" placeholder="Cash Given">
+                </div>
+                <div class="change-display-pill" id="change-display-pill">
+                  Change: Rs. 0.00
+                </div>
+              </div>
+
+              <!-- Quick cash suggestion chips -->
+              <div class="quick-cash-chips" id="quick-cash-chips">
+                <button class="chip-btn" data-cash="exact">Exact</button>
+                <button class="chip-btn" data-cash="500">500</button>
+                <button class="chip-btn" data-cash="1000">1000</button>
+                <button class="chip-btn" data-cash="2000">2000</button>
+                <button class="chip-btn" data-cash="5000">5000</button>
+              </div>
+            </div>
+
+            <!-- Place Order Primary Action Button -->
+            <button class="btn-checkout-primary" id="btn-place-order" disabled>
+              <div class="btn-checkout-content">
+                <span class="btn-checkout-icon">⚡</span>
+                <span class="btn-checkout-text">CHECKOUT & GENERATE BILL</span>
+              </div>
+            </button>
+
+          </div>
+
+        </aside>
+
+      </section>
+
+
+      <!-- ================================================================
+           VIEW: MENU & ITEMS MANAGEMENT (FULL CRUD SYSTEM)
+           ================================================================ -->
+      <section id="view-menu" class="view-section">
+        <div class="menu-mgmt-header">
+          <div>
+            <h2 style="font-size: 22px; font-weight: 800; color: var(--text-pure); display: flex; align-items: center; gap: 10px;">
+              <span>🍽️</span> Menu & Items Management
+            </h2>
+            <p style="color: var(--text-muted); font-size: 13px;">
+              Add new food items, edit prices & sizes, change badges, or delete items from the menu
+            </p>
+          </div>
+          
+          <div class="menu-mgmt-top-actions">
+            <button class="btn-checkout-primary" id="btn-open-add-modal" style="width: auto; padding: 10px 20px; font-size: 13px;">
+              ➕ Add New Item
+            </button>
+            <button class="btn-secondary-action" id="btn-export-menu" title="Download menu as JSON backup">
+              💾 Export JSON
+            </button>
+            <label class="btn-secondary-action" style="cursor: pointer; margin: 0; display: inline-flex; align-items: center;" title="Import menu from JSON backup">
+              📥 Import JSON
+              <input type="file" id="input-import-menu" accept=".json" style="display: none;">
+            </label>
+            <button class="btn-secondary-action" id="btn-reset-default-menu" title="Reset menu to default CRAVE Bites flyer items">
+              🔄 Reset Default
+            </button>
+          </div>
+        </div>
+
+        <!-- Menu Management Filter Toolbar -->
+        <div class="menu-mgmt-toolbar">
+          <div class="search-input-wrap" style="flex: 1; max-width: 400px;">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="menu-mgmt-search" class="search-input" placeholder="Search item name, ingredients, price...">
+          </div>
+
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Category:</label>
+            <select id="menu-mgmt-category-filter" class="form-input" style="width: 200px; padding: 7px 12px;">
+              <option value="All">All Categories</option>
+            </select>
+          </div>
+
+          <div class="catalog-stats-badge" id="menu-mgmt-count-badge" style="margin-left: auto;">
+            Total 75 Items
+          </div>
+        </div>
+
+        <!-- Menu Items Data Table -->
+        <div class="pos-table-wrap" style="flex: 1; overflow-y: auto;">
+          <table class="modern-pos-table menu-mgmt-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Item</th>
+                <th>Name & Badge</th>
+                <th>Category</th>
+                <th>Pricing / Sizes</th>
+                <th>Description</th>
+                <th style="width: 140px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="menu-mgmt-table-body">
+              <!-- Dynamically populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <!-- ================================================================
+           VIEW 2: SALES & REPORTS
+           ================================================================ -->
+      <section id="view-sales" class="view-section">
+        
+        <div class="analytics-header">
+          <div>
+            <h2>Sales & Revenue Analytics</h2>
+            <p style="color: var(--text-muted); font-size: 13px;">Complete offline financial tracking & order logs</p>
+          </div>
+          <button class="btn-secondary-action" id="btn-export-csv">📥 Export to Excel (CSV)</button>
+        </div>
+
+        <!-- 4 KPI Stat Cards -->
+        <div class="kpi-cards-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon-box">💰</div>
+            <div class="kpi-info">
+              <p>Total Revenue (All Time)</p>
+              <h3 id="kpi-total-sales">Rs. 0</h3>
+            </div>
+          </div>
+
+          <div class="kpi-card gold">
+            <div class="kpi-icon-box">📅</div>
+            <div class="kpi-info">
+              <p>Today's Sales</p>
+              <h3 id="kpi-today-sales">Rs. 0</h3>
+            </div>
+          </div>
+
+          <div class="kpi-card green">
+            <div class="kpi-icon-box">📦</div>
+            <div class="kpi-info">
+              <p>Total Orders Placed</p>
+              <h3 id="kpi-total-orders">0</h3>
+            </div>
+          </div>
+
+          <div class="kpi-card blue">
+            <div class="kpi-icon-box">📈</div>
+            <div class="kpi-info">
+              <p>Average Order Value</p>
+              <h3 id="kpi-avg-order">Rs. 0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sales Breakdown & Order History Table -->
+        <div class="sales-details-section">
+          
+          <div class="table-controls-row">
+            <h3 style="color: var(--text-pure); font-size: 16px;">Order History Log</h3>
+            <div style="display: flex; gap: 10px;">
+              <input type="text" id="sales-search-input" class="cart-input" style="width: 250px;" placeholder="Search Order ID, Phone or Name...">
+              <select id="sales-filter-select" class="cart-input" style="width: 140px;">
+                <option value="all">All Records</option>
+                <option value="today" selected>Today Only</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pos-table-wrap">
+            <table class="modern-pos-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date & Time</th>
+                  <th>Customer / Table</th>
+                  <th>Type</th>
+                  <th>Items Ordered</th>
+                  <th>Grand Total</th>
+                  <th>Payment</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="sales-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+
+      <!-- ================================================================
+           VIEW 4: STORE SETTINGS & MENU MANAGEMENT
+           ================================================================ -->
+      <section id="view-settings" class="view-section">
+        <div class="analytics-header">
+          <div>
+            <h2>Store Info & Menu Settings</h2>
+            <p style="color: var(--text-muted); font-size: 13px;">Customize shop details, logo branding, and add menu items</p>
+          </div>
+          <button class="btn-checkout-primary" id="btn-save-settings" style="padding: 10px 20px; font-size: 13px; width: auto;">💾 Save All Settings</button>
+        </div>
+
+        <div class="settings-grid">
+          <!-- Store Profile -->
+          <div class="settings-panel">
+            <h3 style="color: var(--crave-yellow); font-size: 16px;">🏪 Restaurant Profile</h3>
+            
+            <div class="form-group">
+              <label>Restaurant Name</label>
+              <input type="text" id="setting-shop-name" class="form-input" value="CRAVE BITES">
+            </div>
+
+            <div class="form-group">
+              <label>Tagline</label>
+              <input type="text" id="setting-tagline" class="form-input" value="Bigger Bites X Better Cravings">
+            </div>
+
+            <div class="form-group">
+              <label>Phone / Contact (Sakander Sagheer)</label>
+              <input type="text" id="setting-phone" class="form-input" value="03714439700">
+            </div>
+
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" id="setting-address" class="form-input" value="Near Majadadia Masjid, Imam Bargah Road, Toba Tek Singh">
+            </div>
+
+            <div class="form-group">
+              <label>Delivery Fee (Rs.)</label>
+              <input type="number" id="setting-delivery-fee" class="form-input" value="150">
+            </div>
+          </div>
+
+          <!-- Add Item Quick Form & Menu Shortcut -->
+          <div class="settings-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="color: var(--crave-red); font-size: 16px;">🍔 Quick Add Item</h3>
+              <button type="button" class="btn-secondary-action" id="btn-goto-menu-mgmt" style="font-size: 11px; padding: 5px 12px;">
+                📋 Open Full Menu Manager
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label>Item Name</label>
+              <input type="text" id="new-item-name" class="form-input" placeholder="e.g. Double Smashed Burger">
+            </div>
+
+            <div class="form-group">
+              <label>Category</label>
+              <select id="new-item-category" class="form-input">
+                <option value="Burgers">Burgers</option>
+                <option value="Pizza">Pizza</option>
+                <option value="Sides">Sides & Wings</option>
+                <option value="Beverages">Drinks & Shakes</option>
+                <option value="Deals">Combos & Deals</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Single Price (Rs.)</label>
+              <input type="number" id="new-item-price" class="form-input" placeholder="e.g. 750">
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" id="new-item-desc" class="form-input" placeholder="Mouth-watering ingredients description">
+            </div>
+
+            <button class="btn-checkout-primary" id="btn-add-menu-item" style="margin-top: 8px; justify-content: center; width: 100%;">
+              ➕ Add Item to POS Menu
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================================================================
+         THERMAL RECEIPT MODAL (80mm Authentic Thermal Slip)
+         ================================================================ -->
+    <div class="modal-overlay" id="receipt-modal">
+      <div class="receipt-modal-box">
+        
+        <div class="receipt-content-scroll" id="receipt-printable-area">
+          <div class="receipt-header-center">
+            <img src="assets/logo.png" alt="CraveX Bites" class="receipt-logo-img">
+            <div class="receipt-title">CRAVEX BITES</div>
+            <div class="receipt-tagline">GOOD FOOD • GREAT VIBES</div>
+            <div class="receipt-meta" id="rec-address">Food Street, Commercial Blvd</div>
+            <div class="receipt-meta" id="rec-phone">Tel: 0300-7865432</div>
+          </div>
+
+          <div class="receipt-totals-row">
+            <span>Order No:</span>
+            <strong id="rec-order-id">#CXB-1001</strong>
+          </div>
+          <div class="receipt-totals-row">
+            <span>Date/Time:</span>
+            <span id="rec-date-time">2026-10-03 21:00</span>
+          </div>
+          <div class="receipt-totals-row">
+            <span>Order Type:</span>
+            <span id="rec-order-type">Dine-in (Table 4)</span>
+          </div>
+          <div class="receipt-totals-row" id="rec-cust-row">
+            <span>Customer:</span>
+            <span id="rec-customer">Walk-in Guest</span>
+          </div>
+
+          <table class="receipt-table">
+            <thead>
+              <tr>
+                <th style="width: 50%;">ITEM</th>
+                <th style="width: 15%; text-align: center;">QTY</th>
+                <th style="width: 15%; text-align: right;">RATE</th>
+                <th style="width: 20%; text-align: right;">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody id="rec-items-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+
+          <div class="receipt-divider"></div>
+
+          <div class="receipt-totals-row">
+            <span>Subtotal:</span>
+            <span id="rec-subtotal">Rs. 0.00</span>
+          </div>
+          <div class="receipt-totals-row" id="rec-discount-row" style="display: none;">
+            <span>Discount:</span>
+            <span id="rec-discount">- Rs. 0.00</span>
+          </div>
+          <div class="receipt-totals-row" id="rec-delivery-row" style="display: none;">
+            <span>Delivery:</span>
+            <span id="rec-delivery">+ Rs. 150.00</span>
+          </div>
+
+          <div class="receipt-totals-row receipt-grand-total">
+            <span>GRAND TOTAL:</span>
+            <span id="rec-grand-total">Rs. 0.00</span>
+          </div>
+
+          <div class="receipt-totals-row">
+            <span>Payment Mode:</span>
+            <span id="rec-pay-mode">Cash</span>
+          </div>
+          <div class="receipt-totals-row" id="rec-cash-tender-row">
+            <span>Cash Tendered:</span>
+            <span id="rec-cash-tendered">Rs. 0.00</span>
+          </div>
+          <div class="receipt-totals-row" id="rec-change-row">
+            <span>Change Return:</span>
+            <span id="rec-change-returned">Rs. 0.00</span>
+          </div>
+
+          <div class="receipt-footer-center">
+            <p>THANK YOU FOR CRAVING WITH US!</p>
+            <p>GOOD FOOD • GREAT VIBES</p>
+            <div class="receipt-barcode">||||||||||||||||||||||||||||||</div>
+            <small style="font-size: 9px; color: #888;">Powered by CraveX POS</small>
+          </div>
+
+        </div>
+
+        <div class="receipt-modal-actions">
+          <button type="button" class="btn-receipt-edit" id="btn-edit-receipt" title="Go back to cart and edit items">
+            ✏️ Edit Order
+          </button>
+          <button type="button" class="btn-receipt-cancel" id="btn-cancel-receipt" title="Cancel this order without saving">
+            ❌ Cancel Order
+          </button>
+          <button type="button" class="btn-receipt-print" id="btn-print-receipt" title="Print bill and save into sales record">
+            🖨️ Print & Confirm Bill
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================================================================
+         ADD / EDIT MENU ITEM MODAL
+         ================================================================ -->
+    <div class="modal-overlay" id="menu-item-modal">
+      <div class="menu-item-modal-box">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-title-icon" id="modal-title-icon">🍔</span>
+            <div>
+              <h3 id="modal-item-title">Add New Menu Item</h3>
+              <p style="font-size: 11px; color: var(--text-muted);">Fill details below to add or update item in POS system</p>
+            </div>
+          </div>
+          <button class="btn-modal-close" id="btn-close-menu-modal" type="button">✕</button>
+        </div>
+
+        <form id="menu-item-form" class="modal-body-form" onsubmit="return false;">
+          <input type="hidden" id="modal-item-id" value="">
+
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label>Item Name <span style="color: var(--crave-red);">*</span></label>
+              <input type="text" id="modal-name-input" class="form-input" placeholder="e.g. Mighty Zinger Burger" required>
+            </div>
+
+            <div class="form-group">
+              <label>Category <span style="color: var(--crave-red);">*</span></label>
+              <div style="display: flex; gap: 8px;">
+                <select id="modal-cat-select" class="form-input" style="flex: 1;">
+                  <option value="Burgers">Burgers</option>
+                  <option value="Pizza">Pizza</option>
+                  <option value="Deals">Deals</option>
+                  <option value="Platters">Platters</option>
+                  <option value="Wraps & Shawarma">Wraps & Shawarma</option>
+                  <option value="Spin Rolls">Spin Rolls</option>
+                  <option value="Sandwiches">Sandwiches</option>
+                  <option value="Pasta">Pasta</option>
+                  <option value="Starters & Fries">Starters & Fries</option>
+                  <option value="Donner">Donner</option>
+                  <option value="Dip Sauces">Dip Sauces</option>
+                  <option value="Beverages">Beverages</option>
+                  <option value="__NEW__">➕ New Category...</option>
+                </select>
+                <input type="text" id="modal-custom-cat-input" class="form-input" placeholder="Enter category" style="flex: 1; display: none;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing Mode Radio / Switch -->
+          <div class="form-group">
+            <label>Pricing Structure</label>
+            <div class="pricing-mode-toggle">
+              <label class="pricing-radio-label">
+                <input type="radio" name="pricing-mode" id="mode-single" value="single" checked>
+                <span>Single Fixed Price</span>
+              </label>
+              <label class="pricing-radio-label">
+                <input type="radio" name="pricing-mode" id="mode-multi" value="multi">
+                <span>Multi-Size Pricing (S/M/L/XL or 5P/10P)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Single Price Input -->
+          <div class="form-group" id="single-price-container">
+            <label>Price (Rs.) <span style="color: var(--crave-red);">*</span></label>
+            <input type="number" id="modal-single-price" class="form-input" placeholder="e.g. 550" min="0" step="10">
+          </div>
+
+          <!-- Multi-Size Pricing Container -->
+          <div class="form-group" id="multi-size-container" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label>Sizes & Prices (Rs.)</label>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn-xs-pill" id="btn-preset-pizza">🍕 Pizza S/M/L/XL</button>
+                <button type="button" class="btn-xs-pill" id="btn-preset-pieces">🍗 5P / 10P</button>
+                <button type="button" class="btn-xs-pill" id="btn-preset-fries">🍟 Reg / Lrg</button>
+              </div>
+            </div>
+            <div id="size-rows-list" class="size-rows-list">
+              <!-- Dynamically populated size rows -->
+            </div>
+            <button type="button" class="btn-secondary-action" id="btn-add-size-row" style="margin-top: 8px; width: 100%; justify-content: center;">
+              ➕ Add Size Variation
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label>Description / Ingredients / Deal Contents</label>
+            <textarea id="modal-desc-input" class="form-input" rows="2" placeholder="e.g. Crispy chicken breast, garlic mayo, fresh iceberg lettuce"></textarea>
+          </div>
+
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label>Badge / Tag</label>
+              <select id="modal-badge-select" class="form-input">
+                <option value="">None</option>
+                <option value="Bestseller 🔥">Bestseller 🔥</option>
+                <option value="Popular">Popular</option>
+                <option value="Chef Special ⭐">Chef Special ⭐</option>
+                <option value="Spicy 🔥">Spicy 🔥</option>
+                <option value="Hot Deal 💥">Hot Deal 💥</option>
+                <option value="Super Cheesy 🧀">Super Cheesy 🧀</option>
+                <option value="New ✨">New ✨</option>
+                <option value="Saver Deal">Saver Deal</option>
+                <option value="Family">Family</option>
+                <option value="__CUSTOM__">Custom Badge...</option>
+              </select>
+              <input type="text" id="modal-custom-badge-input" class="form-input" placeholder="Type badge" style="display: none; margin-top: 4px;">
+            </div>
+
+            <div class="form-group">
+              <label>Emoji Icon</label>
+              <input type="text" id="modal-emoji-input" class="form-input" value="🍔" style="font-size: 16px; text-align: center;">
+            </div>
+          </div>
+
+          <!-- Food Photo Upload & Library Selector -->
+          <div class="form-group item-photo-section">
+            <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span>Food Item Photo <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(Upload or Choose Library)</span></span>
+              <span id="photo-preview-tag" class="photo-badge-indicator">Preset</span>
+            </label>
+            <div class="photo-picker-box">
+              <!-- Live Thumbnail Preview -->
+              <div class="photo-preview-wrap">
+                <img id="modal-image-preview" src="assets/food/burger_zinger.jpg" alt="Preview" class="photo-preview-img" onerror="this.src='assets/logo.png'">
+              </div>
+
+              <!-- Upload & Controls -->
+              <div class="photo-controls-wrap">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                  <button type="button" class="btn-upload-file" id="btn-browse-file" title="Pick PNG, JPG or WEBP from your computer">
+                    <span>📁</span>
+                    <span>Upload / Update from PC</span>
+                  </button>
+                  <input type="file" id="modal-image-file-input" accept="image/png, image/jpeg, image/webp, image/jpg" style="display: none;">
+                  <button type="button" class="btn-clear-photo" id="btn-clear-photo" title="Reset image back to default">
+                    🔄 Reset Photo
+                  </button>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+                  <span style="font-size: 11px; color: var(--text-muted); white-space: nowrap;">Or Select Library:</span>
+                  <select id="modal-image-select" class="form-input" style="padding: 6px 10px; font-size: 12px; flex: 1;">
+                    <optgroup label="Burgers">
+                      <option value="assets/food/burger_zinger.jpg">🍔 Zinger Burger</option>
+                      <option value="assets/food/burger_patty.jpg">🍔 Shami / Chapli / Patty Burger</option>
+                      <option value="assets/food/burger_monster.jpg">🍔 Monster / Jumbo Burger</option>
+                      <option value="assets/food/burger_cheese.jpg">🍔 Cheese Burger</option>
+                      <option value="assets/food/burger_bbq.jpg">🍔 BBQ Burger</option>
+                      <option value="assets/food/burger_spicy.jpg">🍔 Spicy Burger</option>
+                    </optgroup>
+                    <optgroup label="Wraps, Shawarma & Rolls">
+                      <option value="assets/food/wrap_shawarma.jpg">🌯 Chicken Shawarma & Wrap</option>
+                      <option value="assets/food/spin_roll.jpg">🌯 Crispy Spin Roll / Paratha Roll</option>
+                    </optgroup>
+                    <optgroup label="Pizzas">
+                      <option value="assets/food/pizza_tikka.jpg">🍕 Pizza Tikka</option>
+                      <option value="assets/food/pizza_fajita.jpg">🍕 Pizza Fajita</option>
+                      <option value="assets/food/pizza_crown.jpg">🍕 Pizza Crown / Malai Boti</option>
+                      <option value="assets/food/pizza_deep_dish.jpg">🍕 Deep Dish / Steam Pizza</option>
+                      <option value="assets/food/pizza_pepperoni.jpg">🍕 Pizza Pepperoni</option>
+                      <option value="assets/food/pizza_bbq.jpg">🍕 Pizza BBQ</option>
+                      <option value="assets/food/pizza_margherita.jpg">🍕 Pizza Margherita / Cheese</option>
+                    </optgroup>
+                    <optgroup label="Pasta & Sandwiches">
+                      <option value="assets/food/pasta_baked.jpg">🍝 Baked Macaroni & Pasta</option>
+                      <option value="assets/food/sandwich_club.jpg">🥪 Club Sandwich</option>
+                      <option value="assets/food/sides_garlic_bread.jpg">🥪 Garlic Bread / Toast</option>
+                    </optgroup>
+                    <optgroup label="Starters, Wings & Donner">
+                      <option value="assets/food/donner_kebab.jpg">🥙 Chicken Donner Kebab</option>
+                      <option value="assets/food/chicken_roast.jpg">🍗 Fried Chicken Piece (Broast)</option>
+                      <option value="assets/food/sides_wings.jpg">🍗 Hot & Crispy Wings</option>
+                      <option value="assets/food/nuggets_crispy.jpg">🍗 Crispy Nuggets & Bites</option>
+                      <option value="assets/food/sides_loaded_fries.jpg">🍟 Loaded / Pizza Fries</option>
+                      <option value="assets/food/sides_fries.jpg">🍟 Plain French Fries</option>
+                      <option value="assets/food/sides_cheese_sticks.jpg">🧀 Cheese Sticks</option>
+                      <option value="assets/food/dip_sauces.jpg">🥣 Garlic Mayo / Peri Sauces</option>
+                    </optgroup>
+                    <optgroup label="Combos, Platters & Deals">
+                      <option value="assets/food/platter_feast.jpg">🍱 Crave Special Platter</option>
+                      <option value="assets/food/deal_solo.jpg">🎁 Solo Deal</option>
+                      <option value="assets/food/deal_duo.jpg">🎁 Duo / Couple Deal</option>
+                      <option value="assets/food/deal_party.jpg">🎁 Family / Party Deal</option>
+                    </optgroup>
+                    <optgroup label="Beverages">
+                      <option value="assets/food/drink_can.jpg">🥤 Soft Drink Can</option>
+                      <option value="assets/food/drink_bottle.jpg">🥤 Drink Bottle</option>
+                      <option value="assets/food/drink_choco_shake.jpg">🥤 Chocolate Shake</option>
+                      <option value="assets/food/drink_oreo_shake.jpg">🥤 Oreo Shake</option>
+                      <option value="assets/food/drink_mint.jpg">🥤 Mint Lemonade</option>
+                      <option value="assets/logo.png">⭐ CRAVE Bites Logo</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <!-- Web Image URL Input -->
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+                  <span style="font-size: 11px; color: var(--text-muted); white-space: nowrap;">Or Web Image URL:</span>
+                  <input type="text" id="modal-image-url-input" class="form-input" placeholder="Paste internet image link (https://...)" style="padding: 5px 10px; font-size: 11.5px; flex: 1;">
+                  <button type="button" class="btn-xs-pill" id="btn-apply-image-url" style="padding: 5px 10px; white-space: nowrap;">Apply Link</button>
+                </div>
+
+                <input type="hidden" id="modal-custom-image-data" value="">
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-form-actions">
+            <button type="button" class="btn-clear-cart" id="btn-cancel-modal">Cancel</button>
+            <button type="submit" class="btn-checkout-primary" id="btn-submit-modal-item" style="width: auto; padding: 10px 24px;">
+              💾 Save to Menu
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

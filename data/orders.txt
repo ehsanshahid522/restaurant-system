@@ -1,2 +1,0 @@
-# OrderID|Date|Time|Timestamp|CustomerName|Phone|Address|Table|OrderType|PaymentMethod|Subtotal|Discount|Tax|GrandTotal|CashTendered|Change|ItemsRaw
-ORD-1001|2026-10-01|23:20:27|1790878827808|Walk-in Guest|0300-1234567|-|Table 2|Dine-in|Cash|1390.0|0.0|0.0|1390.0|1500.0|110.0|P1~Chicken Tikka Pizza~Medium~Regular Pan~0.0~1150.0~1;;B1~Soft Drink (Can 345ml)~-~-~0.0~120.0~2

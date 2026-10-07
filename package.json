@@ -1,15 +1,53 @@
 {
-  "name": "pizza-shop-pos",
-  "version": "1.0.0",
-  "description": "Offline Desktop POS & Sales Management System for Pizza Shop",
+  "name": "cravex-bites-pos",
+  "version": "2.0.0",
+  "description": "CRAVE Bites - Modern Offline Desktop POS & Restaurant Management System",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "web": "npx serve .",
+    "dist": "electron-builder --win nsis"
   },
-  "keywords": ["pos", "pizza", "restaurant", "electron", "offline"],
-  "author": "",
+  "keywords": [
+    "pos",
+    "cravex",
+    "restaurant",
+    "fast-food",
+    "pizza",
+    "burger",
+    "offline",
+    "electron"
+  ],
+  "author": "CraveX Bites",
   "license": "MIT",
+  "build": {
+    "appId": "com.cravebites.pos",
+    "productName": "CRAVE Bites POS",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "app.js",
+      "style.css",
+      "main.js",
+      "assets/**/*",
+      "database/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CRAVE Bites POS"
+    }
+  },
   "devDependencies": {
-    "electron": "^34.3.0"
+    "electron": "^34.3.0",
+    "electron-builder": "^26.15.3"
   }
 }
