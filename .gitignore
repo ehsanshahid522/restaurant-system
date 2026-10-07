@@ -1,5 +1,10 @@
 node_modules/
 dist/win-unpacked/
+dist/builder-debug.yml
+dist/*.blockmap
+dist/latest.yml
+dist/.icon-ico/
 *.log
 .DS_Store
 Thumbs.db
+

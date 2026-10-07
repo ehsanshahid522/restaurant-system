@@ -298,9 +298,12 @@ body {
   border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  padding: 14px 10px;
-  gap: 10px;
+  padding: 14px 8px 10px 8px;
+  gap: 8px;
   flex-shrink: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .cat-sidebar-title {
@@ -310,6 +313,7 @@ body {
   letter-spacing: 1px;
   color: var(--text-dim);
   padding: 0 8px 4px 8px;
+  flex-shrink: 0;
 }
 
 .cat-nav-list {
@@ -317,6 +321,18 @@ body {
   flex-direction: column;
   gap: 6px;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  cursor: grab;
+}
+
+.cat-nav-list.is-dragging {
+  cursor: grabbing;
+  user-select: none;
 }
 
 .cat-item-btn {
@@ -407,6 +423,9 @@ body {
   overflow: hidden;
   border-right: 1px solid var(--border-subtle);
   background: var(--bg-base);
+  height: 100%;
+  min-height: 0;
+  position: relative;
 }
 
 /* Search & Ribbon Bar */
@@ -506,16 +525,103 @@ body {
 /* Products Scroll Grid */
 .products-scroll {
   flex: 1;
+  min-height: 0;
+  height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px 20px 24px 20px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  cursor: grab;
 }
 
-.products-scroll::-webkit-scrollbar {
-  width: 6px;
+.products-scroll.is-dragging {
+  cursor: grabbing;
+  user-select: none;
 }
-.products-scroll::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
-  border-radius: 4px;
+
+/* Floating Quick Scroll Navigation */
+.catalog-scroll-floater {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 30;
+}
+
+.btn-scroll-nav {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(18, 21, 29, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-pure);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  transition: all var(--transition-fast);
+}
+
+.btn-scroll-nav:hover {
+  background: var(--crave-red);
+  border-color: var(--crave-red);
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px var(--crave-red-glow);
+}
+
+.btn-scroll-nav:active {
+  transform: scale(0.92);
+}
+
+/* High-Visibility Modern Scrollbars */
+.products-scroll::-webkit-scrollbar,
+.cat-nav-list::-webkit-scrollbar,
+.cart-items-scroll::-webkit-scrollbar,
+.pos-table-wrap::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.products-scroll::-webkit-scrollbar-track,
+.cat-nav-list::-webkit-scrollbar-track,
+.cart-items-scroll::-webkit-scrollbar-track,
+.pos-table-wrap::-webkit-scrollbar-track {
+  background: rgba(14, 16, 23, 0.9);
+  border-radius: 8px;
+}
+
+.products-scroll::-webkit-scrollbar-thumb,
+.cat-nav-list::-webkit-scrollbar-thumb,
+.cart-items-scroll::-webkit-scrollbar-thumb,
+.pos-table-wrap::-webkit-scrollbar-thumb {
+  background: #343d52;
+  border-radius: 8px;
+  border: 2px solid #0e1017;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.products-scroll::-webkit-scrollbar-thumb:hover,
+.cat-nav-list::-webkit-scrollbar-thumb:hover,
+.cart-items-scroll::-webkit-scrollbar-thumb:hover,
+.pos-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: var(--crave-red);
+  box-shadow: 0 0 10px var(--crave-red-glow);
+}
+
+.products-scroll,
+.cat-nav-list,
+.cart-items-scroll,
+.pos-table-wrap {
+  scrollbar-width: thin;
+  scrollbar-color: #343d52 #0e1017;
 }
 
 .products-grid {
@@ -725,6 +831,8 @@ body {
   flex-direction: column;
   overflow: hidden;
   flex-shrink: 0;
+  height: 100%;
+  min-height: 0;
 }
 
 /* Cart Header */
@@ -858,19 +966,15 @@ body {
 /* Cart Items Scroll List */
 .cart-items-scroll {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 10px 18px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.cart-items-scroll::-webkit-scrollbar {
-  width: 5px;
-}
-.cart-items-scroll::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
-  border-radius: 4px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .empty-cart-state {
@@ -1787,6 +1891,29 @@ body {
 .btn-action-delete:hover {
   background: var(--crave-red);
   color: #fff;
+}
+
+.btn-action-move {
+  background: rgba(255, 190, 11, 0.12);
+  border: 1px solid rgba(255, 190, 11, 0.35);
+  color: var(--crave-yellow);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-action-move:hover {
+  background: var(--crave-yellow);
+  color: #0c0e12;
+  transform: scale(1.08);
+}
+
+.btn-action-move:active {
+  transform: scale(0.95);
 }
 
 /* Quick edit button on POS cards */

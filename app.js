@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderCart();
   updateAnalytics();
   renderMenuManagementTable();
+  initDragScrollAndNavigation();
 
   // Fullscreen button
   const fsBtn = document.getElementById('btn-toggle-fullscreen');
@@ -120,6 +121,99 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 });
+
+// ==========================================================================
+// DRAG-TO-SCROLL & TOUCH/MOUSE MOVE ENGINE
+// ==========================================================================
+function initDragScrollAndNavigation() {
+  const catalogScroll = document.getElementById('products-scroll') || document.querySelector('.products-scroll');
+  const catNavList = document.querySelector('.cat-nav-list');
+  const cartScroll = document.querySelector('.cart-items-scroll');
+  const tableWrap = document.querySelector('#view-menu .pos-table-wrap');
+
+  if (catalogScroll) enableDragToScroll(catalogScroll);
+  if (catNavList) enableDragToScroll(catNavList);
+  if (cartScroll) enableDragToScroll(cartScroll);
+  if (tableWrap) enableDragToScroll(tableWrap);
+
+  // Floating Quick Scroll Navigation Buttons
+  const btnUp = document.getElementById('btn-catalog-scroll-up');
+  const btnDown = document.getElementById('btn-catalog-scroll-down');
+
+  if (btnUp && catalogScroll) {
+    btnUp.addEventListener('click', (e) => {
+      e.stopPropagation();
+      catalogScroll.scrollBy({ top: -380, behavior: 'smooth' });
+    });
+  }
+
+  if (btnDown && catalogScroll) {
+    btnDown.addEventListener('click', (e) => {
+      e.stopPropagation();
+      catalogScroll.scrollBy({ top: 380, behavior: 'smooth' });
+    });
+  }
+}
+
+function enableDragToScroll(slider) {
+  if (!slider) return;
+  let isDown = false;
+  let startY = 0;
+  let startX = 0;
+  let scrollTop = 0;
+  let scrollLeft = 0;
+  let hasMoved = false;
+
+  slider.addEventListener('mousedown', (e) => {
+    // Ignore interactive clicks on buttons, inputs, selects, links
+    if (e.target.closest('button, input, select, textarea, a, .card-quick-edit-btn, .btn-add-cart, .size-pill-btn, .btn-action-edit, .btn-action-delete, .btn-action-move')) {
+      return;
+    }
+    // Only primary left button
+    if (e.button !== 0) return;
+
+    isDown = true;
+    hasMoved = false;
+    startY = e.pageY;
+    startX = e.pageX;
+    scrollTop = slider.scrollTop;
+    scrollLeft = slider.scrollLeft;
+    slider.classList.add('is-dragging');
+  });
+
+  const onMouseUp = () => {
+    if (isDown) {
+      isDown = false;
+      slider.classList.remove('is-dragging');
+      setTimeout(() => { hasMoved = false; }, 80);
+    }
+  };
+
+  const onMouseMove = (e) => {
+    if (!isDown) return;
+    const dy = e.pageY - startY;
+    const dx = e.pageX - startX;
+    if (Math.abs(dy) > 4 || Math.abs(dx) > 4) {
+      hasMoved = true;
+    }
+    if (hasMoved) {
+      e.preventDefault();
+      slider.scrollTop = scrollTop - dy;
+      slider.scrollLeft = scrollLeft - dx;
+    }
+  };
+
+  window.addEventListener('mouseup', onMouseUp);
+  window.addEventListener('mousemove', onMouseMove);
+
+  // Prevent accidental clicks on child card or item if dragging was performed
+  slider.addEventListener('click', (e) => {
+    if (hasMoved) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+}
 
 // Live Digital Clock
 function initClock() {
@@ -1611,6 +1705,12 @@ function renderMenuManagementTable() {
       </td>
       <td style="text-align: center;">
         <div class="table-action-btns">
+          <button type="button" class="btn-action-move" onclick="moveMenuItem('${it.id}', -1)" title="Move Item Up in Menu">
+            ▲
+          </button>
+          <button type="button" class="btn-action-move" onclick="moveMenuItem('${it.id}', 1)" title="Move Item Down in Menu">
+            ▼
+          </button>
           <button type="button" class="btn-action-edit" onclick="openEditItemModal('${it.id}')" title="Edit this item">
             ✏️ Edit
           </button>
@@ -2054,10 +2154,32 @@ async function resetDefaultMenu() {
   }
 }
 
-// Expose CRUD Handlers to Global Window Scope for Inline HTML onclicks
+// Move Menu Item Up or Down in Order
+async function moveMenuItem(itemId, direction) {
+  const idx = state.menu.findIndex(it => it.id === itemId);
+  if (idx === -1) return;
+  const targetIdx = idx + direction;
+  if (targetIdx < 0 || targetIdx >= state.menu.length) {
+    showToast(direction < 0 ? 'Item is already at the top!' : 'Item is already at the bottom!', 'info');
+    return;
+  }
+
+  // Swap position in array
+  const temp = state.menu[idx];
+  state.menu[idx] = state.menu[targetIdx];
+  state.menu[targetIdx] = temp;
+
+  await persistMenu();
+  renderMenuManagementTable();
+  renderCatalog();
+  showToast(`↕️ Moved "${temp.name}" ${direction < 0 ? 'up' : 'down'}!`);
+}
+
+// Expose CRUD & Move Handlers to Global Window Scope for Inline HTML onclicks
 window.openEditItemModal = openEditItemModal;
 window.openAddItemModal = openAddItemModal;
 window.closeMenuItemModal = closeMenuItemModal;
 window.deleteMenuItem = deleteMenuItem;
+window.moveMenuItem = moveMenuItem;
 window.showToast = showToast;
 
