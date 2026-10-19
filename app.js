@@ -1080,6 +1080,11 @@ function showReceiptModal(order, isReprint = false) {
   document.getElementById('rec-order-type').textContent = order.orderType + (order.customer.table ? ` (${order.customer.table})` : '');
   document.getElementById('rec-customer').textContent = order.customer.name + (order.customer.phone ? ` - ${order.customer.phone}` : '');
 
+  const recTitle = document.getElementById('rec-title');
+  if (recTitle && state.settings.shopName) recTitle.textContent = state.settings.shopName;
+  const recTagline = document.getElementById('rec-tagline');
+  if (recTagline && state.settings.tagline) recTagline.textContent = state.settings.tagline;
+
   document.getElementById('rec-address').textContent = state.settings.address;
   document.getElementById('rec-phone').textContent = `Tel: ${state.settings.phone}`;
 

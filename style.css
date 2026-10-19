@@ -1597,6 +1597,31 @@ body {
   position: relative;
 }
 
+.btn-receipt-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.08);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  z-index: 10;
+  transition: all var(--transition-fast);
+}
+
+.btn-receipt-modal-close:hover {
+  background: var(--crave-red);
+  color: #fff;
+}
+
 .receipt-content-scroll {
   padding: 22px;
   overflow-y: auto;
@@ -2285,8 +2310,10 @@ body {
     background: white;
     color: black;
   }
-  .receipt-modal-actions {
-    display: none;
+  .receipt-modal-actions,
+  .btn-receipt-modal-close {
+    display: none !important;
   }
 }
+
 
